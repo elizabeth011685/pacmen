@@ -3,8 +3,7 @@ const pacArray = [
   ['./images/PacMan1.png', './images/PacMan2.png'],
   ['./images/PacMan3.png', './images/PacMan4.png'],
 ];
-var direction = 0;
-var focus = 0;
+
 const pacMen = []; // This array holds all the pacmen
 
 // This function returns an object with random values
@@ -25,8 +24,10 @@ function makePac() {
   let game = document.getElementById('game');
   let newimg = document.createElement('img');
   newimg.style.position = 'absolute';
-  newimg.src = './images/PacMan1.png';
+  newimg.src = pacArray[0][0];
   newimg.width = 100;
+  newimg.focs = 0;
+  newimg.direction = 0;
 
   // TODO: set position here
   newimg.style.left = position.x;
@@ -43,6 +44,10 @@ function makePac() {
   };
 }
 
+function start()  {
+  update();
+  updateMouth();
+}
 function update() {
   // loop over pacmen array and move each one and move image in DOM
   pacMen.forEach((item) => {
@@ -52,12 +57,20 @@ function update() {
 
     item.newimg.style.left = item.position.x;
     item.newimg.style.top = item.position.y;
-
-    //focus = (focus + 1) % 2;
-
-    //item.newimg.src = pacArray[direction][focus];
   });
   setTimeout(update, 20);
+}
+
+function updateMouth()  {
+
+  pacMen.forEach((item) => {
+    focs = item.newimg.focs;
+    nw_focs = (focs + 1) % 2;
+
+    item.newimg.focs = nw_focs;
+    item.newimg.src = pacArray[0][nw_focs];
+  });
+  setTimeout(updateMouth, 200);
 }
 
 function checkCollisions(item) {
