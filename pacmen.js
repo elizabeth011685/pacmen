@@ -46,12 +46,15 @@ function makePac() {
 
 function start()  {
   update();
-  updateMouth();
+  updateFocus();
+  updateDirection();
 }
 function update() {
   // loop over pacmen array and move each one and move image in DOM
   pacMen.forEach((item) => {
     checkCollisions(item);
+    item.newimg.src = pacArray[item.newimg.direction][item.newimg.focs];
+
     item.position.x += item.velocity.x;
     item.position.y += item.velocity.y;
 
@@ -61,20 +64,29 @@ function update() {
   setTimeout(update, 20);
 }
 
-function updateMouth()  {
-
+function updateFocus()  {
   pacMen.forEach((item) => {
     focs = item.newimg.focs;
-    nw_focs = (focs + 1) % 2;
-
-    item.newimg.focs = nw_focs;
-    item.newimg.src = pacArray[0][nw_focs];
+    new_focs = (focs + 1) % 2;
+    item.newimg.focs = new_focs;
   });
-  setTimeout(updateMouth, 200);
+  setTimeout(updateFocus, 200);
+}
+
+function updateDirection()  {
+  pacMen.forEach((item) => {
+    direction = item.newimg.direction;
+    new_direction = 0;
+    if(item.velocity.x<0){
+      item.newimg.direction = 1;
+    }else{
+      item.newimg.direction = 0;
+    }
+  });
+  setTimeout(updateDirection, 20);
 }
 
 function checkCollisions(item) {
-  // TODO: detect collision with all walls and make pacman bounce
   if (
     item.position.x + item.velocity.x + item.newimg.width > window.innerWidth ||
     item.position.x + item.velocity.x < 0
@@ -91,5 +103,4 @@ function checkCollisions(item) {
 function makeOne() {
   pacMen.push(makePac()); // add a new PacMan
 }
-//don't change this line
   module.exports = { checkCollisions, update, pacMen };
